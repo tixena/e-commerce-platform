@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_product_product_options",
+  "info": {
+    "displayName": "Product Option",
+    "icon": "cog",
+    "description": "Product configuration option (e.g., Size, Color)"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "values": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

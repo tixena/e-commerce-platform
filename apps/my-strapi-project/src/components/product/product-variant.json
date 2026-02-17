@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_product_product_variants",
+  "info": {
+    "displayName": "Product Variant",
+    "icon": "cube",
+    "description": "Product variant with pricing and availability"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "availableForSale": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "selectedOptions": {
+      "type": "json",
+      "required": true
+    },
+    "priceAmount": {
+      "type": "decimal",
+      "required": true
+    },
+    "priceCurrencyCode": {
+      "type": "string",
+      "default": "USD",
+      "required": true
+    },
+    "sku": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

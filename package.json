@@ -1,0 +1,14 @@
+{
+  "name": "e-commerce-platform",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "prettier": "prettier --write --ignore-unknown .",
+    "prettier:check": "prettier --check --ignore-unknown ."
+  },
+  "devDependencies": {
+    "prettier": "3.5.3"
+  }
+}

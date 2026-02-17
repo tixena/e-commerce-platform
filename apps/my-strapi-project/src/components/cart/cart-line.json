@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_cart_cart_lines",
+  "info": {
+    "displayName": "Cart Line",
+    "icon": "shopping-cart",
+    "description": "Cart line item for server-side carts"
+  },
+  "options": {},
+  "attributes": {
+    "variantId": {
+      "type": "string",
+      "required": true
+    },
+    "productId": {
+      "type": "string",
+      "required": true
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "default": 1
+    }
+  }
+}
