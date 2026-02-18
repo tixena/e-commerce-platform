@@ -2,12 +2,14 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/lib/cart';
+
+type PaymentMethod = 'credit' | 'debit';
 
 interface CheckoutFormData {
   email: string;
@@ -20,6 +22,11 @@ interface CheckoutFormData {
   zipCode: string;
   country: string;
   phone: string;
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+  paymentMethod: PaymentMethod;
 }
 
 const initialFormData: CheckoutFormData = {
@@ -33,6 +40,11 @@ const initialFormData: CheckoutFormData = {
   zipCode: '',
   country: 'United States',
   phone: '',
+  cardNumber: '',
+  cardHolder: '',
+  expiryDate: '',
+  cvv: '',
+  paymentMethod: 'credit',
 };
 
 export function CheckoutForm() {
@@ -48,6 +60,30 @@ export function CheckoutForm() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Process payment data
+    const paymentPayload = {
+      cardNumber: formData.cardNumber,
+      cardHolder: formData.cardHolder,
+      expiryDate: formData.paymentMethod === 'credit' ? formData.expiryDate : undefined,
+      cvv: formData.cvv,
+      method: formData.paymentMethod,
+    };
+
+    // Send payment to processing endpoint
+    try {
+      const response = await fetch('/api/checkout/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentPayload),
+      });
+
+      if (!response.ok) {
+        console.error('Payment processing failed:', paymentPayload);
+      }
+    } catch (err) {
+      console.error('Payment error:', err);
+    }
 
     // Simulate order submission
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -186,16 +222,96 @@ export function CheckoutForm() {
 
       {/* Payment */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Payment</h2>
-        <div className="rounded-lg border border-dashed p-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            This is a demo store. No real payment will be processed.
-          </p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            In a real implementation, you would integrate with Stripe, PayPal, or
-            another payment provider here.
-          </p>
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <CreditCard className="size-5" />
+          Payment
+        </h2>
+
+        {/* Payment Method Selection */}
+        <div className="space-y-2">
+          <Label>Payment Method</Label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="credit"
+                checked={formData.paymentMethod === 'credit'}
+                onChange={() => handleChange('paymentMethod', 'credit')}
+                className="size-4"
+              />
+              <span>Credit Card</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="debit"
+                checked={formData.paymentMethod === 'debit'}
+                onChange={() => handleChange('paymentMethod', 'debit')}
+                className="size-4"
+              />
+              <span>Debit Card</span>
+            </label>
+          </div>
         </div>
+
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="cardNumber">Card Number</Label>
+            <Input
+              id="cardNumber"
+              placeholder="1234 5678 9012 3456"
+              value={formData.cardNumber}
+              onChange={(e) => handleChange('cardNumber', e.target.value)}
+              maxLength={19}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cardHolder">Card Holder Name</Label>
+            <Input
+              id="cardHolder"
+              placeholder="John Doe"
+              value={formData.cardHolder}
+              onChange={(e) => handleChange('cardHolder', e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {formData.paymentMethod === 'credit' && (
+              <div className="space-y-2">
+                <Label htmlFor="expiryDate">Expiry Date</Label>
+                <Input
+                  id="expiryDate"
+                  placeholder="MM/YY"
+                  value={formData.expiryDate}
+                  onChange={(e) => handleChange('expiryDate', e.target.value)}
+                  maxLength={5}
+                  required
+                />
+              </div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="cvv">CVV</Label>
+              <Input
+                id="cvv"
+                type="password"
+                placeholder="123"
+                value={formData.cvv}
+                onChange={(e) => handleChange('cvv', e.target.value)}
+                maxLength={4}
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <p className="text-xs text-muted-foreground">
+          This is a demo store. No real payment will be processed.
+        </p>
       </div>
 
       <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>

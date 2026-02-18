@@ -28,8 +28,25 @@ export function AddToCartButton({
 
     setIsAdding(true);
 
-    // Simulate a brief delay for better UX
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    // Call cart API to add product
+    try {
+      const response = await fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId,
+          variantId: variant.id,
+          quantity: 1,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.error) {
+        console.error('Cart error:', result.error);
+      }
+    } catch (err) {
+      console.error('Failed to sync cart:', err);
+    }
 
     addToCart({
       productId,
