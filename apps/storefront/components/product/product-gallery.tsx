@@ -32,7 +32,7 @@ export function ProductGallery({ featuredImage, images }: ProductGalleryProps) {
         <div className="flex gap-2 overflow-x-auto pb-2">
           {allImages.map((image, index) => (
             <button
-              key={image.id}
+              key={`${image.id}-${index}`}
               onClick={() => setSelectedIndex(index)}
               className={cn(
                 'relative size-20 shrink-0 overflow-hidden rounded-md border-2 transition-colors',
