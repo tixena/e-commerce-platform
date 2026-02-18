@@ -1,5 +1,6 @@
 import { strapiClient } from './client';
 import type { Product, ProductListItem, StrapiResponse } from '@/types';
+import { LIMITS } from '@/lib/constants';
 
 const PRODUCT_POPULATE = 'populate=featuredImage&populate=images&populate=seo&populate=seo.shareImage&populate=options&populate=variants&populate=collections';
 
@@ -18,7 +19,7 @@ interface GetProductsResult {
 export async function getProducts(
   options: GetProductsOptions = {}
 ): Promise<GetProductsResult> {
-  const { limit = 25, page = 1, featured, collectionHandle } = options;
+  const { limit = LIMITS.PRODUCTS_PER_PAGE, page = 1, featured, collectionHandle } = options;
 
   let endpoint = `/products?${PRODUCT_POPULATE}&pagination[page]=${page}&pagination[pageSize]=${limit}`;
 

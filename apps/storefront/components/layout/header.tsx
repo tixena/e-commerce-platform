@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { ShoppingBag, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CartIcon } from '@/components/cart/cart-icon';
 import { getMainMenu } from '@/lib/strapi/menus';
 
 export async function Header() {
@@ -34,11 +35,7 @@ export async function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/cart">
-            <Button variant="ghost" size="icon" aria-label="Shopping cart">
-              <ShoppingBag className="size-5" />
-            </Button>
-          </Link>
+          <CartIcon />
 
           <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu">
             <Menu className="size-5" />
